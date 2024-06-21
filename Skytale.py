@@ -1,37 +1,47 @@
 def encrypt_scytale(message, key):
-    message = message.replace(" ", "").lower()
-    encrypted_message = [''] * key
+    
+    encrypted_text = [''] * key
+    for i, char in enumerate(message):
+        encrypted_text[i % key] += char
+    return ''.join(encrypted_text)
 
-    for i in range(len(message)):
-        row = i % key
-        encrypted_message[row] += message[i]
+def decrypt_scytale(encrypted_text, key):
 
-    return ''.join(encrypted_message)
-
-def decrypt_scytale(encrypted_message, key):
-    n = len(encrypted_message)
-    decrypted_message = [''] * n
-    num_cols = n // key
-    extra_chars = n % key
-
+    decrypted_text = [''] * len(encrypted_text)
+    rows = len(encrypted_text) // key
+    cols = key
+    
+   
     index = 0
-    for col in range(num_cols):
-        for row in range(key):
-            decrypted_message[row * num_cols + col] = encrypted_message[index]
+    for col in range(cols):
+        for row in range(rows):
+            decrypted_text[row * cols + col] = encrypted_text[index]
             index += 1
+    
+ 
+    return ''.join(decrypted_text)
 
-    for row in range(extra_chars):
-        decrypted_message[(num_cols * key) + row] = encrypted_message[index]
-        index += 1
-
-    return ''.join(decrypted_message)
+def main():
+    choice = input("Виберіть операцію:\n1. Шифрування\n2. Розшифрування\n")
+    
+    if choice == '1':
+        message = input("Введіть повідомлення для шифрування: ")
+        key = int(input("Введіть ключ (ширина Сцітали): "))
+        
+    
+        encrypted_text = encrypt_scytale(message, key)
+        print("Зашифроване повідомлення: ", encrypted_text)
+        
+    elif choice == '2':
+        encrypted_text = input("Введіть зашифроване повідомлення: ")
+        key = int(input("Введіть ключ (ширина Сцітали): "))
+        
+ 
+        decrypted_text = decrypt_scytale(encrypted_text, key)
+        print("Розшифроване повідомлення: ", decrypted_text)
+        
+    else:
+        print("Невірний вибір операції. Будь ласка, виберіть 1 або 2.")
 
 if __name__ == "__main__":
-    message = input("Введіть повідомлення: ")
-    key = int(input("Введіть ключ (кількість рядків): "))
-
-    encrypted_message = encrypt_scytale(message, key)
-    print(f"Зашифроване повідомлення: {encrypted_message}")
-
-    decrypted_message = decrypt_scytale(encrypted_message, key)
-    print(f"Розшифроване повідомлення: {decrypted_message}")
+    main()
